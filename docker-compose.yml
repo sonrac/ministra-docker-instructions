@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   ministra:
-    image: infomir/ministra:16-04
+    image: infomir/ministra:14-04
     build:
       context: ./docker-build
       dockerfile: Dockerfile
