@@ -1,0 +1,40 @@
+version: "3.6"
+
+services:
+  ministra:
+    image: infomir/ministra:14-04
+    build:
+      context: ./docker-build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./ministra.tar.gz:/opt/ministra.tar.gz
+      - storage:/data/storage
+    depends_on:
+      - mysql
+      - memcache
+    environment:
+      - "MINISTRA_PATH=/opt/ministra.tar.gz"
+      - "MINISTRA_MYSQL_HOST=mysql"
+      - "MINISTRA_MYSQL_PORT=3306"
+      - "MINISTRA_MYSQL_USER=ministra"
+      - "MINISTRA_MYSQL_PASS=ministra_user_password"
+      - "MINISTRA_MYSQL_DBNAME=ministra"
+      - "MINISTRA_MEMCACHE_HOST=memcache"
+    ports:
+      - 880:80
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=ministra
+      - MYSQL_USER=ministra
+      - MYSQL_PASSWORD=ministra_user_password
+      - MYSQL_ROOT_PASSWORD=ministra_root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+  memcache:
+    image: memcached:latest
+
+volumes:
+  mysql_data:
+  storage:
